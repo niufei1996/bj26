@@ -18,5 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url('^book',include('book.url'))
+    url('^book',include('book.url')),
+    url('^fly',include('fly.urls')),
+
 ]
