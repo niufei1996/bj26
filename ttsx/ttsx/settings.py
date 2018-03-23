@@ -39,6 +39,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tt_user',
+    'tt_goods',
+    'tt_order',
+    'tt_cart',
+    'tinymce',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,3 +112,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'tt_user.User'
