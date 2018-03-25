@@ -117,3 +117,10 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'tt_user.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'nf932856678@163.com'
+EMAIL_HOST_PASSWORD = 'nf199686'
+EMAIL_FORM = '天天生鲜<nf932856678@163.com>'
