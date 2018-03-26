@@ -124,3 +124,25 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'nf932856678@163.com'
 EMAIL_HOST_PASSWORD = 'nf199686'
 EMAIL_FORM = '天天生鲜<nf932856678@163.com>'
+
+#设置缓存，使用redis保存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/6",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+# Session
+# http://django-redis-chs.readthedocs.io/zh_CN/latest/#session-backend
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+LOGIN_URL = '/user/login'
+

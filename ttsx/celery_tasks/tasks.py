@@ -1,15 +1,15 @@
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer,SignatureExpired
 from django.conf import settings
 from django.core.mail import send_mail
-from celery import Celery
 
+from celery import Celery
 app = Celery('celery_tasks.tasks',broker='redis://127.0.0.1:6379/6')
 
 
 @app.task
 def send_user_active(user_id,user_email):
-    # 加密编号
     serializer = Serializer(settings.SECRET_KEY, 60 * 60)
+    # 加密编号
     value = serializer.dumps({'id': user_id}).decode()
 
     # 激活邮箱

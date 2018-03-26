@@ -19,7 +19,9 @@ class Address(BaseModel):
     district=models.ForeignKey(AreaInfo,related_name='district')
     addr = models.CharField(max_length=100)
     code=models.CharField(max_length=6)
-    phone=models.CharField(max_length=11)
+    phone_number=models.CharField(max_length=11)
     isDefault=models.BooleanField(default=True)
+    user=models.ForeignKey(User,null=True)
+
     class Meta:
         db_table='df_address'
