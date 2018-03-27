@@ -146,3 +146,7 @@ SESSION_CACHE_ALIAS = "default"
 
 LOGIN_URL = '/user/login'
 
+DEFAULT_FILE_STORAGE = 'utils.storage.FdfsStorage'
+#制定FastDFS客户端的配置文件
+FDFS_CLIENT = os.path.join(BASE_DIR,'utils/fdfs_client.conf')
+FDFS_SERVER = 'http://127.0.0.1:8888/'
