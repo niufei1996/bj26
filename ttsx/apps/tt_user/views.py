@@ -4,8 +4,6 @@ from .models import User,Address,AreaInfo
 import re
 from django.http import HttpResponse,JsonResponse
 from django.core.mail import send_mail
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired
-from django.core.mail import send_mail
 from django.conf import settings
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer,SignatureExpired
 from celery_tasks.tasks import send_user_active
@@ -145,6 +143,7 @@ class LoginView(View):
             context['err_msg'] = '请去邮箱激活'
             return render(request,'login.html',context)
 
+        #保持登陆状态
         login(request,user)
         #获取next参数
         next_url = request.GET.get('next','/user/info')
@@ -175,15 +174,17 @@ def info(request):
     redis_client = get_redis_connection()
     # #因为redis中会存储所有用户的浏览记录，所以在建上需要区分用户
     gid_list = redis_client.lrange('history%d'%request.user.id,0,-1)
+    print('history%d'%request.user.id)
     # #根据商品编号查询商品对象
     goods_list = []
+
     for gid in gid_list:
         goods_list.append(GoodsSKU.objects.get(pk=gid))
-
+    print(goods_list)
     context = {
         'title':'个人信息',
         'address': address,
-        'good_list':goods_list,
+        'goods_list':goods_list,
     }
     return render(request,'user_center_info.html',context)
 

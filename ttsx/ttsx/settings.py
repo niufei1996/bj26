@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'tt_order',
     'tt_cart',
     'tinymce',
+    'haystack',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -145,8 +146,25 @@ SESSION_CACHE_ALIAS = "default"
 
 
 LOGIN_URL = '/user/login'
-
+#指定django保存时用哪个类来保存
 DEFAULT_FILE_STORAGE = 'utils.storage.FdfsStorage'
 #制定FastDFS客户端的配置文件
 FDFS_CLIENT = os.path.join(BASE_DIR,'utils/fdfs_client.conf')
 FDFS_SERVER = 'http://127.0.0.1:8888/'
+
+#生成静态页面的路径
+GENERATE_HTML = os.path.join(BASE_DIR,'static/html')
+
+HAYSTACK_CONNECTIONS = {
+  'default': {
+      # 使用whoosh引擎：提示，如果不需要使用jieba框架实现分词，就使用whoosh_backend
+      'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+      # 索引文件路径
+      'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+  }
+}
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+# HANSTACK_SEARCH_RESULTS_PER_PAGE = 1
+#控制一页显示多少条数据
+HAYSTACK_SEARCH_RESULTS_PER_PAGE=1
