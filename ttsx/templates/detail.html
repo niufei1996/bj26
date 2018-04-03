@@ -55,6 +55,8 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
+                    {% csrf_token %}
+                    <input type="hidden" id="sku_id" value="{{ sku.id }}">
 					<input type="text" class="num_show fl" value="1">
 					<a href="javascript:;" class="add fr">+</a>
 					<a href="javascript:;" class="minus fr">-</a>	
@@ -108,17 +110,29 @@
 		var $to_x = $('#show_count').offset().top;
 		var $to_y = $('#show_count').offset().left;
 
-		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
 		$('#add_cart').click(function(){
+		    $.post('/cart/add',{
+		        'sku_id':$('#sku_id').val(),//商品编号
+                'count':$('.num_show').val(),//商品数量
+                'csrfmiddlewaretoken':'{{ csrf_token }}',//通过post请求的csrf验证
+            },function (data) {
+                if(data.status==1){
+                                $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
 			$(".add_jump").stop().animate({
 				'left': $to_y+7,
 				'top': $to_x+7},
 				"fast", function() {
 					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
+						$('#show_count').html(data.total_count);
 					});
 
 			});
+                }
+                }
+            )
+
+
+
 		})
 
     $('.num_show').blur(function () {

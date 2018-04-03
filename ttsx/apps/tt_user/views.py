@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from utils.views import LoginRequiredView,LoginRequiredViewMixin
 from django_redis import get_redis_connection
 from tt_goods.models import GoodsSKU
-# Create your views here.
+import json
 
 #判断register访问是post请求还是get请求
 class RegisterView(View):
@@ -154,6 +154,28 @@ class LoginView(View):
         else:
             response.set_cookie('uname',uname,expires=60*60*24)
 
+        #1.读取cookie中的购物车信息，转成字典
+        cart_str = request.COOKIES.get('cart')
+        if cart_str:
+            # 讲cookie中的购物车信息转存入redis中
+            key = 'cart%d' % request.user.id
+            redis_client = get_redis_connection()
+            cart_dict = json.loads(cart_str)
+            #2.遍历字典
+            for k,v in cart_dict.items():
+                #3.判断redis中是否已经存在这个商品
+                if redis_client.hexists(key,k):
+                    #3.1如果有则数量相加
+                    count1 = int(redis_client.hget(key,k))
+                    count2 = v
+                    count0 = count1 + count2
+                    if count0 > 5:
+                        count0 = 5
+                    redis_client.hset(key,k,count0)
+                else:
+                    #如果没有则直接添加
+                    redis_client.hset(key,k,v)
+            response.delete_cookie('cart')
 
         return response
 #用户退出
